@@ -92,29 +92,28 @@ class PokeList extends React.Component {
     var species = this.props.pokeData.species.find(item => (parseInt(item.id, 10) === id))
     var speciesName = PokeDataHandler.getSpeciesNameById(this.props.pokeData, id)
     var alolaId = species && parseInt(species.alolaId, 10)
-    var alolaId3 = String(alolaId).padStart(3, "0")
+    // var alolaId3 = String(alolaId).padStart(3, "0")
     var id3 = String(id).padStart(3, "0")
     var stateName = PokeDataHandler.dexStateToName(dexObj.state)
     var bgColor = this.getBgColor(dexObj.state)
-    // var alolaId = PokeDataHandler.getAlolaIdByNationalId(this.props.pokeData, id)
     return (
       <div className="row PokeList-item" key={id}>
         <div className="col-4">
           [<a href={`https://pokemondb.net/pokedex/${id3}#dex-evolution`} target="_blank">
-            pdb.net
+          pdb.net
           </a>]
-          [<a href={`https://www.serebii.net/pokedex-sm/${id3}.shtml`} target="_blank">
-            srb.net
-          </a>]{' '}
-          [<a href={`https://bulbapedia.bulbagarden.net/wiki/${speciesName}_(Pokémon)#Evolution`} target="_blank">
-            bul.net
-          </a>]
+      [<a href={`https://www.serebii.net/pokedex-sm/${id3}.shtml`} target="_blank">
+        srb.net
+      </a>]{' '}
+      [<a href={`https://bulbapedia.bulbagarden.net/wiki/${speciesName}_(Pokémon)#Evolution`} target="_blank">
+        bul.net
+      </a>]
         </div>
         <div className="col-1">{id}</div>
         <div className="col-1">{alolaId}</div>
         <div className="col-2">
           <input type="text"
-            className="w-100"
+            className="w-100 text-center"
             ref={el => this.listInputs[id] = el}
             onChange={() => {return false}}
             style={{backgroundColor: bgColor}}
@@ -146,21 +145,10 @@ class PokeList extends React.Component {
     if (this.props.pokeDex !== nextProps.pokeDex) {
       saveLocalStorage(nextProps.pokeData, nextProps.pokeDex)
     }
-    // if (document.activeElement.tagName !== "INPUT") {
-    //   this.focusFirstInput()
-    // }
   }
   componentDidMount() {
     this.updatePokeData()
   }
-  // focusFirstInput() {
-  //   if (this.filteredSpecies) {
-  //     let input = this.listInputs[this.filteredSpecies[0].id]
-  //     if (input) {
-  //         input.focus()
-  //     }
-  //   }
-  // }
   render() {
     if (!this.props.pokeData) return null
 
@@ -183,17 +171,51 @@ class PokeList extends React.Component {
             break
         }
       }
-      // this.filteredSpecies[i]
     }
+    stats.total = this.filteredSpecies.length
+    stats.seenPercent = Math.round((stats.seen / stats.total) * 100)
+    stats.caughtPercent = Math.round((stats.caught / stats.total) * 100)
+    stats.uncaught = stats.total - stats.caught
+    stats.uncaughtPercent = Math.round((stats.uncaught / stats.total) * 100)
     return (
       <div className="PokeList">
+        <nav className="navbar navbar-light bg-light">
+          <span className="navbar-text">
+            Seen
+            {' '}
+            {stats.seen}
+            {' '}
+            <span className="badge badge-pill badge-secondary">
+              {stats.seenPercent}%
+            </span>
+          </span>
+          <span className="navbar-text">
+            Caught
+            {' '}
+            {stats.caught}
+            {' '}
+            <span className="badge badge-pill badge-secondary">
+              {stats.caughtPercent}%
+            </span>
+          </span>
+          <span className="navbar-text">
+            Uncaught
+            {' '}
+            {stats.uncaught}
+            {' '}
+            <span className="badge badge-pill badge-secondary">
+              {stats.uncaughtPercent}%
+            </span>
+          </span>
+          <span className="navbar-text">
+            Total
+            {' '}
+            {stats.total}
+          </span>
+        </nav>
         <div>
-          Seen: <b>{stats.seen}</b>,
-          Caught: <b>{stats.caught}</b>,
-          Uncaught: <b>{this.filteredSpecies.length - stats.caught}</b>,
-          Total: <b>{this.filteredSpecies.length}</b>
+          {this.renderList()}
         </div>
-        {this.renderList()}
       </div>
     )
   }
