@@ -23,10 +23,10 @@ function csvToObj(filename) {
   })
 }
 
+// Filter object by pokeObjItem[filterKey] === filterValue
 function filterPokeObj(pokeObj, filterKey, filterValue) {
   return pokeObj.filter(item => (item[filterKey] === filterValue))
 }
-
 
 export class PokeDataHandler {
   static getSpeciesNameById(pokeData, id) {
@@ -135,5 +135,6 @@ export async function fetchPokeDex() {
     return {}
   }
 }
+
 
 export default fetchPokeData

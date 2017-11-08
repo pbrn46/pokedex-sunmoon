@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import actions from '../../actions'
-import { PokeDataHandler, fetchPokeData, fetchPokeDex, saveLocalStorage } from '../../lib/pokeData'
+import { PokeDataHandler } from '../../lib/pokeData'
 
 import './index.css'
 
@@ -28,8 +28,8 @@ class PokeList extends React.Component {
     this.listInputs = {}
   }
   selectNextInput(id) {
-    var next = this.filteredSpecies.findIndex(item => parseInt(item.id, 10) === id) + 1
-    next = this.filteredSpecies[next] ? this.filteredSpecies[next].id : this.filteredSpecies[0].id
+    var next = this.props.filteredSpecies.findIndex(item => parseInt(item.id, 10) === id) + 1
+    next = this.props.filteredSpecies[next] ? this.props.filteredSpecies[next].id : this.props.filteredSpecies[0].id
     var nextInput = this.listInputs[next]
     if (nextInput) {
       nextInput.focus()
@@ -37,8 +37,8 @@ class PokeList extends React.Component {
     }
   }
   selectPrevInput(id) {
-    var prev = this.filteredSpecies.findIndex(item => parseInt(item.id, 10) === id) - 1
-    prev = this.filteredSpecies[prev] ? this.filteredSpecies[prev].id : this.filteredSpecies[this.filteredSpecies.length - 1].id
+    var prev = this.props.filteredSpecies.findIndex(item => parseInt(item.id, 10) === id) - 1
+    prev = this.props.filteredSpecies[prev] ? this.props.filteredSpecies[prev].id : this.props.filteredSpecies[this.props.filteredSpecies.length - 1].id
     var prevInput = this.listInputs[prev]
     if (prevInput) {
       prevInput.focus()
@@ -128,91 +128,14 @@ class PokeList extends React.Component {
   }
   renderList() {
     var items = []
-    for (let i = 0; i < this.filteredSpecies.length; i++) {
-      items.push(this.renderListItem(parseInt(this.filteredSpecies[i].id, 10)))
+    for (let i = 0; i < this.props.filteredSpecies.length; i++) {
+      items.push(this.renderListItem(parseInt(this.props.filteredSpecies[i].id, 10)))
     }
     return items
   }
-  updatePokeData() {
-    fetchPokeData().then(data => {
-      this.props.setPokeData(data)
-    })
-    fetchPokeDex().then(data => {
-      this.props.setPokeDex(data)
-    })
-  }
-  componentWillReceiveProps(nextProps) {
-    if (this.props.pokeDex !== nextProps.pokeDex) {
-      saveLocalStorage(nextProps.pokeData, nextProps.pokeDex)
-    }
-  }
-  componentDidMount() {
-    this.updatePokeData()
-  }
   render() {
-    if (!this.props.pokeData) return null
-
-    this.filteredSpecies = this.props.pokeData.species.filter(item => item.alolaId)
-    this.filteredSpecies.sort((a, b) => a.alolaId - b.alolaId)
-
-    var stats = {seen: 0, caught: 0}
-    for (let i = 0; i < this.filteredSpecies.length; i++) {
-      var species = this.filteredSpecies[i]
-      var dex = this.props.pokeDex[species.id]
-      if (dex) {
-        switch (dex.state) {
-          case 1:
-            stats.seen += 1
-            break
-          case 2:
-            stats.caught += 1
-            break
-          default:
-            break
-        }
-      }
-    }
-    stats.total = this.filteredSpecies.length
-    stats.seenPercent = Math.round((stats.seen / stats.total) * 100)
-    stats.caughtPercent = Math.round((stats.caught / stats.total) * 100)
-    stats.uncaught = stats.total - stats.caught
-    stats.uncaughtPercent = Math.round((stats.uncaught / stats.total) * 100)
     return (
       <div className="PokeList">
-        <nav className="navbar navbar-light bg-light">
-          <span className="navbar-text">
-            Seen
-            {' '}
-            {stats.seen}
-            {' '}
-            <span className="badge badge-pill badge-secondary">
-              {stats.seenPercent}%
-            </span>
-          </span>
-          <span className="navbar-text">
-            Caught
-            {' '}
-            {stats.caught}
-            {' '}
-            <span className="badge badge-pill badge-secondary">
-              {stats.caughtPercent}%
-            </span>
-          </span>
-          <span className="navbar-text">
-            Uncaught
-            {' '}
-            {stats.uncaught}
-            {' '}
-            <span className="badge badge-pill badge-secondary">
-              {stats.uncaughtPercent}%
-            </span>
-          </span>
-          <span className="navbar-text">
-            Total
-            {' '}
-            {stats.total}
-          </span>
-        </nav>
         <div>
           {this.renderList()}
         </div>
