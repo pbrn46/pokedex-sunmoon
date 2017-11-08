@@ -2,4 +2,6 @@
 #+AUTHOR: Boris Wong
 #+DATE: <2017-11-01 Wed> 
 
-Pokedex tracker for Pokemon Sun and Moon
+Pokedex tracker for Pokemon Sun and Moon.
+
+For licensing, see LICENSE.org

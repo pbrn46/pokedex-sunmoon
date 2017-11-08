@@ -1,1 +1,5 @@
-All rights reserved.
+Unique content in this project is licensed under MIT. Some data is taken from
+https://github.com/veekun/pokedex and under their license terms. Data used in
+this project is considered by the author to be fair use. This project does not
+take claim in any data that is the intellectual property of the Pokemon
+franchise, and therefore they data may be subject to their terms of use.
