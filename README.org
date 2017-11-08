@@ -4,4 +4,6 @@
 
 Pokedex tracker for Pokemon Sun and Moon.
 
+Preview the project at http://reflexive.software/pokedex
+
 For licensing, see LICENSE.org
